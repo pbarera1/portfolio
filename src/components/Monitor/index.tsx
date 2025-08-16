@@ -12,7 +12,6 @@ import {useState, useEffect, useRef} from 'react';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import ClassicModal from '@/components/ClassicModal';
-import {useRouter} from 'next/router';
 
 gsap.registerPlugin(Draggable);
 
@@ -49,6 +48,7 @@ const StyledMonitor = styled.div`
     .skill {
         margin-bottom: 12px;
         columns: 3;
+        break-inside: avoid;
     }
 `;
 
@@ -77,7 +77,7 @@ const StyledDropDown = styled.div`
     }
 `;
 
-type ChildType = React.FC | React.ReactElement;
+type ChildType = React.ReactNode | undefined;
 
 interface IconWithTextProps {
     Icon: React.ComponentType<IconProps>;
@@ -138,18 +138,29 @@ const MENU_DATA = [
 
 export default function Monitor() {
     const desktopRef = useRef(null);
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState<Date | null>(null);
     const [openMenuItem, setOpenMenuItem] = useState('');
 
     const handleMenuOpen = (title: string) => {
         setOpenMenuItem(title);
     };
 
-    const hrs = time.getHours();
-    const mins = time.getMinutes();
-    const formattedHour = String(hrs).padStart(2, '0');
-    const formattedMinute = String(mins).padStart(2, '0');
-    const dateString = formattedHour + ':' + formattedMinute;
+    useEffect(() => {
+        // initialize on mount
+        setTime(new Date());
+        // tick every minute
+        const interval = setInterval(() => setTime(new Date()), 60_000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const dateString = time
+        ? new Intl.DateTimeFormat(undefined, {
+              hour: '2-digit',
+              minute: '2-digit',
+          })
+              .format(time)
+              .split(' ')?.[0]
+        : '';
 
     useEffect(() => {
         // terrible close menu logic
@@ -175,7 +186,7 @@ export default function Monitor() {
         }, 60000);
 
         return () => {
-            clearTimeout(timeout);
+            clearInterval(timeout);
             window.removeEventListener('click', handleDropDownClick);
         };
     }, []);
@@ -259,7 +270,7 @@ export default function Monitor() {
                     <IconWithText fill={'#fff'} Icon={FolderIcon} text="Projects" />
                     <IconWithText fill={'#fff'} Icon={FileIcon} text="Skills">
                         <div>
-                            <h3 className="skill__header">
+                            <h3 className="skill__header text-lg">
                                 Languages, Libraries & Frameworks
                             </h3>
                             <section className="skill">
@@ -277,7 +288,9 @@ export default function Monitor() {
                                     <div key={index}>{item}</div>
                                 ))}
                             </section>
-                            <h3 className="skill__header">Tooling & Infrastructure</h3>
+                            <h3 className="skill__header text-lg">
+                                Tooling & Infrastructure
+                            </h3>
                             <section className="skill">
                                 {[
                                     'AWS',
@@ -293,7 +306,7 @@ export default function Monitor() {
                                     <div key={index}>{item}</div>
                                 ))}
                             </section>
-                            <h3 className="skill__header">Databases & APIs</h3>
+                            <h3 className="skill__header text-lg">Databases & APIs</h3>
                             <section className="skill">
                                 {[
                                     'REST APIs',
@@ -307,7 +320,7 @@ export default function Monitor() {
                                     <div key={index}>{item}</div>
                                 ))}
                             </section>
-                            <h3 className="skill__header">Other</h3>
+                            <h3 className="skill__header text-lg">Other</h3>
                             <section className="skill">
                                 {[
                                     'Git',

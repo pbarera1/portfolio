@@ -1,10 +1,11 @@
 'use client';
+import {useRef} from 'react';
 import styled from 'styled-components';
+import {useLazyVideo} from '@/hooks/useLazyVideo';
 
 const StyledSurf = styled.div`
     position: relative;
     width: 100%;
-    height: 100vh;
     min-height: 100vh;
     background: linear-gradient(
         74deg,
@@ -26,7 +27,6 @@ const StyledSurf = styled.div`
         left: 0;
         bottom: 0;
         width: 100%;
-        height: 100vh;
         min-height: 100vh;
         background-color: rgba(0, 0, 0, 0.4);
         z-index: 1;
@@ -45,7 +45,6 @@ const StyledSurf = styled.div`
 
     video {
         width: 100%;
-        height: 100vh;
         min-height: 100vh;
         object-fit: cover;
     }
@@ -70,6 +69,9 @@ const StyledSurf = styled.div`
 `;
 
 const Surf = () => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const visible = useLazyVideo(videoRef);
+
     return (
         <StyledSurf>
             <div className="video-overlay"></div>
@@ -88,15 +90,16 @@ const Surf = () => {
                 </ul>
             </div>
             <video
+                ref={videoRef}
                 width="1280"
                 height="720"
                 preload="none"
                 playsInline
                 muted
                 autoPlay
-                loop>
-                <source src="/surf.mp4" type="video/mp4" />
-            </video>
+                loop
+                {...(visible ? {src: '/surf.mp4'} : {})}
+            />
         </StyledSurf>
     );
 };

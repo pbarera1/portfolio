@@ -35,6 +35,4 @@ read up on relational DB's vs non relational
 
 
 DOM sizing on the file icon
-Lazyload video
-Images need width/height to lazyload
 Minfied react error - related to time or date

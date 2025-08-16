@@ -23,7 +23,7 @@ export default function Home() {
                 <RecentHighlights
                     post={{
                         title: 'How I built a tiny component library',
-                        slug: 'tiny-component-library',
+                        slug: 'https://bvh-data-viewer.vercel.app',
                         excerpt: 'Design tokens, Storybook, and ergonomics that scale.',
                         date: '2025-07-10',
                         readingTime: '6 min',

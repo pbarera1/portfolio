@@ -1,3 +1,4 @@
+'use client';
 import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import {gsap} from 'gsap';
@@ -24,13 +25,12 @@ const StyledClassicModal = styled.div`
     font-family: 'chicago';
 
     .window {
-        min-width: 200px;
-        min-height: 100px;
-        max-width: 70vw;
-        max-height: 60vh;
+        min-width: 90vw;
+        min-height: 70vh;
+        max-width: 95vw;
+        max-height: 80vh;
         background: #fff;
-        border: 1px solid var(--system7-border);
-
+        border: 1px solid #000;
         box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
         resize: both;
         overflow: hidden;
@@ -45,14 +45,16 @@ const StyledClassicModal = styled.div`
     }
 
     .window-titlebar {
-        background: var(--system7-titlebar-active);
+        border-top: 4px solid #d8d8d8;
+        border-bottom: 4px solid #d8d8d8;
+        background: repeating-linear-gradient(180deg, #000 0px 1px, #d8d8d8 1px 3px);
         color: white;
-        padding: 2px 5px;
+        padding: 0 5px;
         cursor: move;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 24px;
+        height: 28px;
         position: relative;
     }
 
@@ -72,8 +74,8 @@ const StyledClassicModal = styled.div`
     }
 
     .window-close {
-        width: 16px;
-        height: 16px;
+        width: 19px;
+        height: 19px;
         border: 1px solid #000;
         background: #fff;
         cursor: pointer;
@@ -128,39 +130,21 @@ const StyledClassicModal = styled.div`
     }
 
     @media (max-width: 768px) {
-        .window {
-            width: calc(100% - 20px) !important; /* Add 10px padding on each side */
-            height: calc(100% - 30px) !important; /* Adjusted for top bar + padding */
-            top: 25px !important; /* Slightly more space from the top */
-            left: 10px !important; /* Add left padding */
-            resize: none;
-            max-width: 500px; /* Prevent windows from getting too wide */
-            margin: 0 auto; /* Center the window if screen is wider than max-width */
-        }
+        // .window {
+        //     width: calc(100% - 20px) !important; /* Add 10px padding on each side */
+        //     height: calc(100% - 30px) !important; /* Adjusted for top bar + padding */
+        //     top: 25px !important; /* Slightly more space from the top */
+        //     left: 10px !important; /* Add left padding */
+        //     resize: none;
+        //     max-width: 500px; /* Prevent windows from getting too wide */
+        //     margin: 0 auto; /* Center the window if screen is wider than max-width */
+        // }
 
-        /* Make sure content fits nicely */
-        .window-content {
-            padding: 8px;
-            font-size: 14px; /* Slightly smaller text on mobile */
-        }
-
-        /* Ensure the About window specifically isn't too large */
-        .window[style*='width: 400px'][style*='height: 225px'] {
-            width: calc(100% - 40px) !important;
-            max-width: 400px !important;
-            max-height: 225px !important;
-            left: 50% !important;
-            transform: translateX(-50%);
-        }
-
-        /* Ensure the Access main security grid window specifically isn't too large */
-        .window[style*='width: 230px'][style*='height: 250px'] {
-            width: 230px !important;
-            height: 250px !important;
-            left: 50% !important;
-            transform: translateX(-50%);
-            resize: none !important;
-        }
+        // /* Make sure content fits nicely */
+        // .window-content {
+        //     padding: 8px;
+        //     font-size: 14px; /* Slightly smaller text on mobile */
+        // }
     }
 
     .window-content::-webkit-scrollbar {
@@ -325,16 +309,29 @@ const StyledClassicModal = styled.div`
         background: #cdcccd;
     }
 `;
-export default function ClassicModal({open, title = 'File', onClose, children}) {
-    const overlayRef = useRef(null);
-    const windowRef = useRef(null);
-    const titlebarRef = useRef(null);
-    const draggableRef = useRef(null); // keep instance to kill on close
+
+type ChildType = React.ReactNode | undefined;
+interface ClassicModalProps {
+    open: boolean;
+    title: string | undefined;
+    onClose?: () => void;
+    children?: ChildType;
+}
+export default function ClassicModal({
+    open,
+    title = 'File',
+    onClose,
+    children,
+}: ClassicModalProps) {
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const windowRef = useRef<HTMLDivElement>(null);
+    const titlebarRef = useRef<HTMLDivElement>(null);
+    const draggableRef = useRef<Draggable | null>(null);
 
     // ESC to close
     useEffect(() => {
         if (!open) return;
-        const onKey = (e) => e.key === 'Escape' && onClose?.();
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.();
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
     }, [open, onClose]);
@@ -383,8 +380,8 @@ export default function ClassicModal({open, title = 'File', onClose, children}) 
         <StyledClassicModal
             className="overlay"
             ref={overlayRef}
-            onMouseDown={(e) => {
-                if (e.target === overlayRef.current) onClose?.();
+            onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+                if (e.target === e.currentTarget) onClose?.();
             }}>
             <div
                 ref={windowRef}
@@ -394,10 +391,7 @@ export default function ClassicModal({open, title = 'File', onClose, children}) 
                     cursor: 'grab',
                     transform: 'translate3d(0,0,0)',
                 }}>
-                <div
-                    ref={titlebarRef}
-                    className="window-titlebar"
-                    style={{background: 'var(--system7-titlebar-active)'}}>
+                <div ref={titlebarRef} className="window-titlebar">
                     <div className="window-close" onClick={onClose} />
                     <div className="window-title">{title}</div>
                 </div>

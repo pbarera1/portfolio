@@ -33,7 +33,7 @@ export default function RecentHighlights({
     return (
         <section
             aria-labelledby="recent-heading"
-            className="relative isolate h-screen min-h-screen flex justify-center items-center w-full">
+            className="relative isolate min-h-screen flex justify-center items-center w-full">
             <div className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
                 <div className="mb-8 flex items-center justify-between gap-4">
                     <h2
@@ -63,7 +63,7 @@ export default function RecentHighlights({
                     <Card
                         label="Latest post"
                         title={post.title}
-                        href={`/blog/${post.slug}`}
+                        href={`${post.slug}`}
                         date={post.date}
                         kicker={post.readingTime}
                         image={post.coverImage}
@@ -121,8 +121,8 @@ function Card({
                 <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     {image ? (
                         <Image
-                            width={549}
-                            height={475}
+                            // width={549}
+                            // height={475}
                             src={image}
                             alt={title}
                             fill
