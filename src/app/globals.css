@@ -1,26 +1,103 @@
-@import "tailwindcss";
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'chicago';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    src: local('Chicago'), url('/chicago.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('/chicago.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
+    --system7-titlebar-active: linear-gradient(
+        to bottom,
+        #d8d8d8 0%,
+        #d8d8d8 4px,
+        #000000 4px,
+        #000000 5px,
+        #d8d8d8 5px,
+        #d8d8d8 7px,
+        #000000 7px,
+        #000000 8px,
+        #d8d8d8 8px,
+        #d8d8d8 10px,
+        #000000 10px,
+        #000000 11px,
+        #d8d8d8 11px,
+        #d8d8d8 13px,
+        #000000 13px,
+        #000000 14px,
+        #d8d8d8 14px,
+        #d8d8d8 16px,
+        #000000 16px,
+        #000000 17px,
+        #d8d8d8 17px,
+        #d8d8d8 19px,
+        #000000 19px,
+        #000000 20px,
+        #d8d8d8 20px,
+        #d8d8d8 22px
+    );
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
 }
 
+/* html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+} */
+body {
+    background: var(--background);
+    color: #000;
+    font-family: 'chicago', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    font-size: 16px;
+}
+
+.global-monitor {
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'chicago', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+
+    /* Classic Mac gray dotted background */
+    /* tweak these to taste */
+    --bg: #c6c6c6; /* base gray */
+    --dot1: #9e9e9e; /* darker dot */
+    --dot2: #e3e3e3; /* lighter dot */
+    --cell: 4px; /* spacing of the grid */
+    --r: 1px; /* dot radius */
+    background: radial-gradient(
+                circle,
+                var(--dot1) var(--r),
+                transparent calc(var(--r) + 0.1px)
+            )
+            0 0 / var(--cell) var(--cell),
+        radial-gradient(circle, var(--dot2) var(--r), transparent calc(var(--r) + 0.1px))
+            calc(var(--cell) / 2) calc(var(--cell) / 2) / var(--cell) var(--cell),
+        var(--bg);
+}
+
+.icons {
+    align-items: flex-end;
 }
