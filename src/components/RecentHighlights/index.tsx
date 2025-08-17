@@ -93,7 +93,7 @@ export default function RecentHighlights({
     );
 }
 
-function Card({
+export function Card({
     label,
     title,
     href,
