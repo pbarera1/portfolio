@@ -13,6 +13,7 @@
         /* Chrome 26+, Opera 23+, Firefox 39+ */ url('/chicago.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 :root {
     --background: #ffffff;
@@ -55,12 +56,12 @@
     --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     :root {
         --background: #0a0a0a;
         --foreground: #ededed;
     }
-}
+} */
 
 /* html,
 body {

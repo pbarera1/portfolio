@@ -14,13 +14,14 @@ export type Post = {
 
 export type Project = {
     name: string;
-    slug: string;
+    slug?: string;
     blurb?: string;
     date: string; // ISO date (launched/updated)
     stack?: string[];
     coverImage?: string; // /images/project.jpg
     repoUrl?: string;
     liveUrl?: string;
+    label?: string;
 };
 
 export default function RecentHighlights({
@@ -93,6 +94,44 @@ export default function RecentHighlights({
     );
 }
 
+interface ImageOrVideoProps {
+    image?: string; // The URL/path for the image or video, guaranteed to be a string here.
+    title?: string; // The alt text for accessibility, guaranteed to be a string.
+}
+
+const ImageOrVideo: React.FC<ImageOrVideoProps> = ({image, title}) => {
+    if (!image) {
+        return (
+            <div className="absolute inset-0 grid place-items-center text-4xl">🗂️</div>
+        );
+    } else if (image?.includes('.mp4')) {
+        return (
+            <video
+                // width="1280"
+                // height="720"
+                style={{maxHeight: '500px'}}
+                preload="metadata"
+                controls={true}
+                className="object-cover transition duration-300 group-hover:scale-[1.02]">
+                <source src={image} type="video/mp4" />
+            </video>
+        );
+    } else {
+        return (
+            <Image
+                // width={549}
+                // height={475}
+                src={image}
+                alt={title || ''}
+                fill
+                className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                priority={false}
+            />
+        );
+    }
+};
+
 export function Card({
     label,
     title,
@@ -103,43 +142,31 @@ export function Card({
     description,
     chips,
     secondaryLinks,
+    className,
 }: {
     label: string;
     title: string;
     href: string;
     date: string;
     kicker?: string;
-    image?: string;
+    image?: string | undefined;
     description?: string;
     chips?: string[];
     secondaryLinks?: {label: string; href: string}[];
+    className?: string;
 }) {
     return (
-        <article className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
+        <article
+            className={`${className} cursor-default group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white transition dark:border-zinc-800 dark:bg-zinc-900`}>
             {/* Media */}
-            <Link href={href} className="block">
-                <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                    {image ? (
-                        <Image
-                            // width={549}
-                            // height={475}
-                            src={image}
-                            alt={title}
-                            fill
-                            className="object-cover transition duration-300 group-hover:scale-[1.02]"
-                            sizes="(min-width: 1024px) 50vw, 100vw"
-                            priority={false}
-                        />
-                    ) : (
-                        <div className="absolute inset-0 grid place-items-center text-4xl">
-                            🗂️
-                        </div>
-                    )}
-                    <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-1 text-xs font-medium text-zinc-800 ring-1 ring-zinc-200 backdrop-blur dark:bg-zinc-900/80 dark:text-zinc-200 dark:ring-zinc-700">
-                        {label}
-                    </span>
-                </div>
-            </Link>
+            {/* <Link href={href} className="block"> */}
+            <div className="relative aspect-[16/9] w-full bg-zinc-100 dark:bg-zinc-800">
+                <ImageOrVideo image={image} title={title} />
+                <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-1 text-xs font-medium text-zinc-800 ring-1 ring-zinc-200 backdrop-blur dark:bg-zinc-900/80 dark:text-zinc-200 dark:ring-zinc-700">
+                    {label}
+                </span>
+            </div>
+            {/* </Link> */}
 
             {/* Body */}
             <div className="p-5 sm:p-6">
@@ -160,10 +187,10 @@ export function Card({
                 </div>
 
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                    <Link href={href} className="focus:outline-none">
-                        <span className="absolute inset-0" aria-hidden />
-                        {title}
-                    </Link>
+                    {/* <Link href={href} className="focus:outline-none"> */}
+                    <span className="absolute inset-0" aria-hidden />
+                    {title}
+                    {/* </Link> */}
                 </h3>
 
                 {description && (

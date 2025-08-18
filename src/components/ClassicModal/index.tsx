@@ -25,8 +25,8 @@ const StyledClassicModal = styled.div`
     font-family: 'chicago';
 
     .window {
-        min-width: 90vw;
-        min-height: 70vh;
+        width: 90vw;
+        height: 70vh;
         max-width: 95vw;
         max-height: 80vh;
         background: #fff;
@@ -34,6 +34,7 @@ const StyledClassicModal = styled.div`
         box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
         resize: both;
         overflow: hidden;
+        will-change: transform;
     }
     @media screen and (min-width: 768px) {
         .window {
@@ -89,7 +90,7 @@ const StyledClassicModal = styled.div`
     .window-content {
         padding: 10px;
         overflow: auto;
-        height: calc(100% - 24px);
+        height: calc(100% - 24px); //@todo
         position: relative;
         font-family: 'chicago', sans-serif; /* Ensure text uses Arial */
     }

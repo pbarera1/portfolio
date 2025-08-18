@@ -12,6 +12,8 @@ import {useState, useEffect, useRef} from 'react';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import ClassicModal from '@/components/ClassicModal';
+import {projectData} from '@/app/projects/data';
+import {Card} from '@/components/RecentHighlights';
 
 gsap.registerPlugin(Draggable);
 
@@ -94,7 +96,6 @@ const IconWithText = ({Icon, fill, text, children, href}: IconWithTextProps) => 
                 <>
                     <a
                         href={href}
-                        target="_blank"
                         className="icon flex flex-col text-6xl md:text-6xl align-items-center items-center">
                         <Icon fill={fill} />
                         <div className="label text-lg md:text-xl text-center">{text}</div>
@@ -267,7 +268,43 @@ export default function Monitor() {
                             loading="lazy"
                         />
                     </IconWithText>
-                    <IconWithText fill={'#fff'} Icon={FolderIcon} text="Projects" />
+                    <IconWithText fill={'#fff'} Icon={FolderIcon} text="Projects">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                            {projectData.map((project, index) => (
+                                <IconWithText
+                                    key={index}
+                                    fill={'#fff'}
+                                    Icon={FileIcon}
+                                    text={project.name}>
+                                    <Card
+                                        className="rounded-none shadow-none border-none"
+                                        label={project.label}
+                                        title={project.name}
+                                        href={`${project.slug}`}
+                                        date={project.date}
+                                        kicker={project.stack?.join(' · ')}
+                                        image={project.coverImage}
+                                        description={project.blurb}
+                                        secondaryLinks={
+                                            [
+                                                project.liveUrl && {
+                                                    label: 'Live',
+                                                    href: project.liveUrl,
+                                                },
+                                                project.repoUrl && {
+                                                    label: 'Repo',
+                                                    href: project.repoUrl,
+                                                },
+                                            ].filter(Boolean) as {
+                                                label: string;
+                                                href: string;
+                                            }[]
+                                        }
+                                    />
+                                </IconWithText>
+                            ))}
+                        </div>
+                    </IconWithText>
                     <IconWithText fill={'#fff'} Icon={FileIcon} text="Skills">
                         <div>
                             <h3 className="skill__header text-lg">
