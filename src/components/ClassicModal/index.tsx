@@ -356,7 +356,7 @@ export default function ClassicModal({
                 gsap.set(this.target, {zIndex: 1, cursor: 'grabbing'});
             },
             onRelease() {
-                gsap.set(this.target, {cursor: 'grab'});
+                gsap.set(this.target, {cursor: 'grab', zIndex: 'auto'});
             },
             onDragEnd() {
                 const grid = 12; // snap-to-grid (optional)
