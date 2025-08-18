@@ -55,3 +55,8 @@ Video compression is tricky, you can checkout the ffmpeg cli tool to change fram
 3. Use a CDN
 
 This can help minimize latency by serving static asset from closer proximity.
+
+- apply jobs
+- message https://www.linkedin.com/in/chancegrissom/ and https://www.linkedin.com/in/sean-finkel/
+- table sort
+- stocks

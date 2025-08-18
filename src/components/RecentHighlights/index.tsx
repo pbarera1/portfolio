@@ -152,7 +152,7 @@ export function Card({
     image?: string | undefined;
     description?: string;
     chips?: string[];
-    secondaryLinks?: {label: string; href: string}[];
+    secondaryLinks?: {label?: string; href?: string}[];
     className?: string;
 }) {
     return (
@@ -221,16 +221,31 @@ export function Card({
                             </span>
                         </Link>
                     )}
-                    {secondaryLinks?.map((l) => (
-                        <Link
-                            key={l.href}
-                            href={l.href}
-                            className="text-sm text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-300"
-                            target={l.href.startsWith('http') ? '_blank' : undefined}
-                            rel={l.href.startsWith('http') ? 'noreferrer' : undefined}>
-                            {l.label}
-                        </Link>
-                    ))}
+                    {secondaryLinks && secondaryLinks.length > 0 && (
+                        <div className="mt-3 flex gap-2">
+                            {secondaryLinks.map((l, idx) => {
+                                if (!l.href) return null;
+                                return (
+                                    <Link
+                                        key={l.href}
+                                        href={l.href}
+                                        className="text-sm text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-300"
+                                        target={
+                                            l.href.startsWith('http')
+                                                ? '_blank'
+                                                : undefined
+                                        }
+                                        rel={
+                                            l.href.startsWith('http')
+                                                ? 'noreferrer'
+                                                : undefined
+                                        }>
+                                        {l.label}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
         </article>

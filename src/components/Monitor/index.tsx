@@ -287,10 +287,6 @@ export default function Monitor() {
                                         description={project.blurb}
                                         secondaryLinks={
                                             [
-                                                project.liveUrl && {
-                                                    label: 'Live',
-                                                    href: project.liveUrl,
-                                                },
                                                 project.repoUrl && {
                                                     label: 'Repo',
                                                     href: project.repoUrl,
