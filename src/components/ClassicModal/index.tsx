@@ -38,7 +38,7 @@ const StyledClassicModal = styled.div`
     }
     @media screen and (min-width: 768px) {
         .window {
-            height: 500px;
+            height: 600px;
             width: 700px;
             max-width: 1000px;
             max-height: 1000px;
@@ -93,6 +93,7 @@ const StyledClassicModal = styled.div`
         height: calc(100% - 24px); //@todo
         position: relative;
         font-family: 'chicago', sans-serif; /* Ensure text uses Arial */
+        touch-action: auto;
     }
 
     .window-content img {
@@ -350,6 +351,14 @@ export default function ClassicModal({
             bounds: overlay,
             type: 'x,y',
             inertia: false,
+            // allow links/buttons/inputs inside to be clicked
+            dragClickables: true,
+            clickableTest: function (target) {
+                if (target.tagName === 'A') {
+                    return true; // Allow default link behavior
+                }
+                return false; // Treat other elements as draggable
+            },
             // If you only want to drag from the title bar, uncomment:
             // trigger: titlebarRef.current,
             onPress() {

@@ -188,15 +188,14 @@ export function Card({
 
                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                     {/* <Link href={href} className="focus:outline-none"> */}
-                    <span className="absolute inset-0" aria-hidden />
                     {title}
                     {/* </Link> */}
                 </h3>
 
                 {description && (
-                    <p className="mt-2 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-300">
-                        {description}
-                    </p>
+                    <p
+                        className="mt-2 text-sm text-zinc-600 dark:text-zinc-300"
+                        dangerouslySetInnerHTML={{__html: description}}></p>
                 )}
 
                 {chips && chips.length > 0 && (
@@ -212,15 +211,16 @@ export function Card({
                 )}
 
                 <div className="mt-4 flex items-center gap-3">
-                    <Link
-                        href={href}
-                        className="inline-flex items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
-                        View
-                        <span aria-hidden className="translate-y-px">
-                            ↗
-                        </span>
-                    </Link>
-
+                    {href && (
+                        <Link
+                            href={href}
+                            className="inline-flex items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
+                            View
+                            <span aria-hidden className="translate-y-px">
+                                ↗
+                            </span>
+                        </Link>
+                    )}
                     {secondaryLinks?.map((l) => (
                         <Link
                             key={l.href}

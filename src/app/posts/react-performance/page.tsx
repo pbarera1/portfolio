@@ -29,64 +29,64 @@ const postData = {
     tags: ['React', 'Performance', 'Big Data'],
     content: `
 ## Why performance matters
-If users have a slow, laggy experience with your product they won't want to use it. And if you rely heavily on SEO value, Web Vitals are a ranking factor in Google's search algorithm.
 
-"Walmart noticed a 1% increase in revenue for every 100 milliseconds improvement in page load."
+If users have a slow, laggy experience with your product, they won't want to use it. And if you rely heavily on SEO value, Web Vitals are a ranking factor in Google’s search algorithm.
+
+Walmart noticed a 1% increase in revenue for every 100 milliseconds of improvement in page load time.
 
 ## Common performance optimizations
 
 ### Memoization
 
-Memoization is caching a functions output given certain paramters.
+Memoization is the process of caching a function's output for a given set of parameters.
 
-React hooks to implement this technique can dramtically reduce re-renders.
+React hooks that implement this technique can dramatically reduce unnecessary re-renders.
+Check out \`useMemo\`, \`useCallback\`, and \`React.memo\`.
 
-Check our useMemo, useCallback and React.memo. The experimental React complier tool implemenets many of this optimization by default, so hopefully pretty soon we won't have to write these very often.
+The experimental React Compiler tool already implements many of these optimizations by default, so in the future we may not need to write them manually as often.
 
 ### Check your dependency arrays
 
-Try to include as few items as possible in your dependency arrays. For example, avoid putting an object in there is you only want to rerender when a certain keys changes.
+Try to include as few items as possible in your dependency arrays.
+For example, avoid putting an entire object in there if you only want to re-render when one of its keys changes.
 
-### Virtualization (Windowing large lists)
+### Virtualization (windowing large lists)
 
-Packages like react-window can help you implement this concept. If you have a ton of DOM elements (ex. supoer long list) that will hurt performance.
+Packages like **react-window** can help you implement virtualization.
 
-Using virualization allows you to remove the elements that are outside the viewport. You keep a space holder and as you scroll up or down you place the data for the elements back into the DOM.
+If you render a ton of DOM elements (e.g., a very long list), performance will suffer. Virtualization removes elements that are outside the viewport, replacing them with placeholders. As the user scrolls, the relevant elements are re-inserted into the DOM.
 
 Instagram is a classic example of this technique.
 
-### Lazyload when possible
+### Lazy loading
 
-You can use Suspense of next/dynamic to split JS into it's own chunk or load it on demand based on a user action like a click.
+You can use \`Suspense\` or \`next/dynamic\` to split JavaScript into its own chunk or load it on demand based on a user action (like a click).
 
 ### React Profiler
 
-This is a great tool for finding the biggest offenders in you app. You can use a flamegraph to see the sorted view of what component is taking the longest time to render.
+The React Profiler is a great tool for finding the biggest performance offenders in your app.
+With a flamegraph, you can see which components take the longest time to render and optimize accordingly.
 
 ### @next/bundle-analyzer
 
-This will give you a visual or what the largest items in your bundles are. Maybe you're using a 3rd party package thats much larger than you though. Or maybe you imported all of lodash when you only meant to import a specific utility.
+This tool gives you a visual breakdown of the largest items in your bundles.
 
-Complex svg's can also add to the bundle size. Once you have alot of nested shapes it might make sense to link to your svg in an img tag, that was you don't bloat js file sizes.
+- You might be importing a third-party package that's much larger than expected.
+- Or maybe you imported **all of lodash** instead of a single utility.
 
-### Webworkers
+Complex SVGs can also inflate bundle size. If you have a lot of nested shapes, consider referencing the SVG in an \`<img>\` tag instead of embedding it inline.
 
-If you have intensive data computation to do, webworkers could be very useful. Say you have a dataset of 1000s of items and you need to transform is clientside in some way, you can use webworkers to coplete this action without blocking the main thread.
+### Web Workers
 
-This can help keep your UI responsive during these CPU intense tasks.
+If you have intensive data computations to run, Web Workers are very useful. For example, if you have a dataset with thousands of items and need to transform it client-side, a Web Worker can complete the computation without blocking the main thread. This helps keep your UI responsive during CPU-intensive tasks.
 
 ### Sampling
 
-Google analytics would use this technqiue to avoid keeping giant datasets in state.
-
-This technique involves taking a subset of a larger dataset to create a smaller representative set.
+Analytics platforms often use sampling to avoid holding massive datasets in memory. Sampling involves taking a subset of a large dataset to create a smaller, representative set that’s faster to process.
 
 ### Pagination
 
-Another technique to help break up large data sets. You split your data in smaller chunks or pages.
-
-Ex. give me posts 1-5, when the user wants to see more hit your API for 6-10
-
+Pagination breaks large datasets into smaller pages or chunks. For example, request posts 1-5 first; when the user wants to see more, fetch 6-10 from your API.
 `,
 } as const;
 

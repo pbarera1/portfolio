@@ -369,6 +369,7 @@ export default function Monitor() {
                                     'Storybook',
                                     'SEO',
                                     'Web Security',
+                                    'Accessability',
                                 ].map((item, index) => (
                                     <div key={index}>{item}</div>
                                 ))}
