@@ -15,14 +15,23 @@ gsap.registerPlugin(Draggable);
  */
 
 const StyledClassicModal = styled.div`
-    max-height: 100vh;
+    /* Ensure the overlay covers the entire viewport */
     position: fixed;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    z-index: 99;
-    padding: 24px;
-    font-family: 'chicago';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Crucial for occupying full height */
+    max-height: 100vh; /* Good for preventing overflow on some mobile browsers */
+    // background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+
+    /* Use flexbox to perfectly center the modal window */
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+
+    z-index: 1000; /* Ensure modal is on top of other content */
+    padding: 16px; /* Add some padding around the modal on smaller screens */
+    font-family: 'chicago', sans-serif; /* Fallback to sans-serif if 'chicago' isn't loaded */
 
     .window {
         width: 90vw;
@@ -68,6 +77,13 @@ const StyledClassicModal = styled.div`
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        line-clamp: 1; /* For modern browsers */
+        -webkit-box-orient: vertical;
     }
 
     .window-titlebar.inactive .window-title {
@@ -129,24 +145,6 @@ const StyledClassicModal = styled.div`
         background: #c0c0c0;
         border: 1px solid #000;
         cursor: se-resize;
-    }
-
-    @media (max-width: 768px) {
-        // .window {
-        //     width: calc(100% - 20px) !important; /* Add 10px padding on each side */
-        //     height: calc(100% - 30px) !important; /* Adjusted for top bar + padding */
-        //     top: 25px !important; /* Slightly more space from the top */
-        //     left: 10px !important; /* Add left padding */
-        //     resize: none;
-        //     max-width: 500px; /* Prevent windows from getting too wide */
-        //     margin: 0 auto; /* Center the window if screen is wider than max-width */
-        // }
-
-        // /* Make sure content fits nicely */
-        // .window-content {
-        //     padding: 8px;
-        //     font-size: 14px; /* Slightly smaller text on mobile */
-        // }
     }
 
     .window-content::-webkit-scrollbar {
@@ -353,12 +351,8 @@ export default function ClassicModal({
             inertia: false,
             // allow links/buttons/inputs inside to be clicked
             dragClickables: true,
-            clickableTest: function (target) {
-                if (target.tagName === 'A') {
-                    return true; // Allow default link behavior
-                }
-                return false; // Treat other elements as draggable
-            },
+            trigger: titlebarRef.current, // <— only the bar starts a drag
+            minimumMovement: 6,
             // If you only want to drag from the title bar, uncomment:
             // trigger: titlebarRef.current,
             onPress() {

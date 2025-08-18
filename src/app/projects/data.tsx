@@ -77,7 +77,7 @@ export const projectData = [
     },
     {
         name: 'AAC Geolocation API',
-        slug: 'https://bvh-data-viewer.vercel.app',
+        slug: '',
         blurb: 'Using MaxMind IPv4/IPv6 data, this API returns a user’s latitude, longitude, and closest city. The global state of our web applications could then adapt, e.g., by showing the nearest rehab facility.',
         date: '2025-08-01',
         stack: ['Express', 'MongoDB', 'AWS', 'Redis'],

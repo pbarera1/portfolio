@@ -112,7 +112,7 @@ const ImageOrVideo: React.FC<ImageOrVideoProps> = ({image, title}) => {
                 style={{maxHeight: '500px'}}
                 preload="metadata"
                 controls={true}
-                className="object-cover transition duration-300 group-hover:scale-[1.02]">
+                className="justify-center items-center m-auto transition duration-300 group-hover:scale-[1.02]">
                 <source src={image} type="video/mp4" />
             </video>
         );
@@ -160,7 +160,7 @@ export function Card({
             className={`${className} cursor-default group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white transition dark:border-zinc-800 dark:bg-zinc-900`}>
             {/* Media */}
             {/* <Link href={href} className="block"> */}
-            <div className="relative aspect-[16/9] w-full bg-zinc-100 dark:bg-zinc-800">
+            <div className="justify-center items-center relative aspect-[16/9] w-full bg-zinc-100 dark:bg-zinc-800">
                 <ImageOrVideo image={image} title={title} />
                 <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-1 text-xs font-medium text-zinc-800 ring-1 ring-zinc-200 backdrop-blur dark:bg-zinc-900/80 dark:text-zinc-200 dark:ring-zinc-700">
                     {label}
@@ -210,19 +210,16 @@ export function Card({
                     </ul>
                 )}
 
-                <div className="mt-4 flex items-center gap-3">
+                <div className="mt-4 flex items-center align-items-center gap-3">
                     {href && (
                         <Link
                             href={href}
                             className="inline-flex items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
                             View
-                            <span aria-hidden className="translate-y-px">
-                                ↗
-                            </span>
                         </Link>
                     )}
                     {secondaryLinks && secondaryLinks.length > 0 && (
-                        <div className="mt-3 flex gap-2">
+                        <div className="flex gap-2">
                             {secondaryLinks.map((l, idx) => {
                                 if (!l.href) return null;
                                 return (
