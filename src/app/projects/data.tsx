@@ -15,7 +15,7 @@ export const projectData = [
     {
         name: 'AAC Component Library',
         slug: '',
-        blurb: "I created this Storybook application to house all of AAC's internal components, which were shared across 20 different Next.js applications. Testing was primarily done with React Testing Library, and code coverage was monitored through GitHub Actions.",
+        blurb: "I created this Storybook application to house all of AAC's internal components, which were shared across a portfolio Next.js applications. Testing was primarily done with React Testing Library, and code coverage was monitored through GitHub Actions.",
         date: '2025-08-01',
         stack: ['Storybook', 'React', 'Express', 'S3'],
         coverImage: '/projects/cl.png',
@@ -24,7 +24,7 @@ export const projectData = [
     {
         name: 'AAC Marketing Sites',
         slug: 'https://rehabs.com',
-        blurb: 'A suite of 12 Next.js applications pulling content from a headless CMS via the WordPress REST API. These sites were divided among four product teams, where SEO and performance optimization were critical. Notable domains included <a href="https://rehabs.com">Rehabs.com</a>, <a href="https://americanaddictioncenters.org/">AmericanAddictionCenters.org</a>, and <a href="https://lagunatreatment.com/">LagunaTreatment.com</a>.',
+        blurb: 'A suite of 15 Next.js applications pulling content from a headless CMS via the WordPress REST API. These sites were divided among four product teams, where SEO and performance optimization were critical. Notable domains included <a href="https://rehabs.com">Rehabs.com</a>, <a href="https://americanaddictioncenters.org/">AmericanAddictionCenters.org</a>, and <a href="https://lagunatreatment.com/">LagunaTreatment.com</a>.',
         date: '2025-08-01',
         stack: ['Next.js', 'Express', 'AWS', 'Headless WordPress', 'MySQL'],
         coverImage: '/projects/rehabs.png',
