@@ -376,7 +376,7 @@ export default function Monitor() {
                         fill={'#fff'}
                         Icon={FileIcon}
                         text="Resume"
-                        href="/phil-barera-resume.pdf"
+                        href="/phil-barera-resume-1.pdf"
                     />
                     <IconWithText fill={'#fff'} Icon={TrashIcon} text="Trash">
                         <img src="/raccoon.jpg" width="498" height="298" loading="lazy" />
