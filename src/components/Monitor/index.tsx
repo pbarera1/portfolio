@@ -49,7 +49,6 @@ const StyledMonitor = styled.div`
     }
     .skill {
         margin-bottom: 12px;
-        columns: 3;
         break-inside: avoid;
     }
 `;
@@ -306,7 +305,7 @@ export default function Monitor() {
                             <h3 className="skill__header text-lg">
                                 Languages, Libraries & Frameworks
                             </h3>
-                            <section className="skill">
+                            <section className="skill columns-2 md:columns-3">
                                 {[
                                     'JavaScript',
                                     'React',
@@ -324,7 +323,7 @@ export default function Monitor() {
                             <h3 className="skill__header text-lg">
                                 Tooling & Infrastructure
                             </h3>
-                            <section className="skill">
+                            <section className="skill columns-2 md:columns-3">
                                 {[
                                     'AWS',
                                     'Docker',
@@ -340,7 +339,7 @@ export default function Monitor() {
                                 ))}
                             </section>
                             <h3 className="skill__header text-lg">Databases & APIs</h3>
-                            <section className="skill">
+                            <section className="skill columns-2 md:columns-3">
                                 {[
                                     'REST APIs',
                                     'MySQL',
@@ -354,7 +353,7 @@ export default function Monitor() {
                                 ))}
                             </section>
                             <h3 className="skill__header text-lg">Other</h3>
-                            <section className="skill">
+                            <section className="skill columns-2 md:columns-3">
                                 {[
                                     'Git',
                                     'Agile/Scrum',

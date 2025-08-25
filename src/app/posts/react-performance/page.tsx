@@ -32,7 +32,9 @@ const postData = {
 
 If users have a slow, laggy experience with your product, they won't want to use it. And if you rely heavily on SEO value, Web Vitals are a ranking factor in Google’s search algorithm.
 
-Walmart noticed a 1% increase in revenue for every 100 milliseconds of improvement in page load time.
+You've probably seen this quote on the lighthouse loading screen:
+
+"Walmart noticed a 1% increase in revenue for every 100 milliseconds of improvement in page load time."
 
 ## Common performance optimizations
 
@@ -72,7 +74,7 @@ With a flamegraph, you can see which components take the longest time to render 
 This tool gives you a visual breakdown of the largest items in your bundles.
 
 - You might be importing a third-party package that's much larger than expected.
-- Or maybe you imported **all of lodash** instead of a single utility.
+- Or maybe you imported all of lodash instead of a single utility.
 
 Complex SVGs can also inflate bundle size. If you have a lot of nested shapes, consider referencing the SVG in an \`<img>\` tag instead of embedding it inline.
 
