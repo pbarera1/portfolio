@@ -1,6 +1,6 @@
 # Phil Barera Portfolio Site
 
-- This Next.js application features a showcase of various software projects. The 1984 macOS style was used as inspiration for the styling.
+- This Next.js application features a showcase of various software projects. The 1984 macOS was used as inspiration for the styling.
 - Live reference https://philb.vercel.app/
 - Hosted on Vercel, autodeploys with a push to main branch
 
