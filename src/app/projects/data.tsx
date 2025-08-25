@@ -15,7 +15,7 @@ export const projectData = [
     {
         name: 'AAC Component Library',
         slug: '',
-        blurb: "I created this Storybook application to house all of AAC's internal components, which were shared across a portfolio Next.js applications. Testing was primarily done with React Testing Library, and code coverage was monitored through GitHub Actions.",
+        blurb: "I created this Storybook application to house all of AAC's internal components, which were shared across a portfolio of Next.js applications. Testing was primarily done with React Testing Library, and code coverage was monitored through GitHub Actions.",
         date: '2025-08-01',
         stack: ['Storybook', 'React', 'Express', 'S3'],
         coverImage: '/projects/cl.png',
