@@ -50,60 +50,9 @@ function SpeechApp() {
         };
     }, []);
 
-    // useEffect hook to initialize the Web Speech API.
     useEffect(() => {
-        // Check if the browser supports the Web Speech API.
-        // Use window.webkitSpeechRecognition for Chrome/Safari support.
-        const SpeechRecognition =
-            window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        // If the API is not supported, set an error message.
-        if (!SpeechRecognition) {
-            setError(
-                'Web Speech API is not supported in this browser. Please use Chrome or Safari.',
-            );
-            return;
-        }
-
-        // Create a new SpeechRecognition instance.
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US'; // Set the default language for recognition.
-        recognition.interimResults = false; // Only return final results.
-        recognition.continuous = true; // Stop listening after one phrase.
-
-        // Event handler for when a result is received.
-        recognition.onresult = (event: any) => {
-            // Get the last transcription result.
-            const last = event.results.length - 1;
-            const text = event.results[last][0].transcript;
-
-            console.log(text);
-            if (text.trim() === 'close program') {
-                setIsListening(false);
-            } else {
-                setTranscript((prevText) => prevText + text + '.');
-            }
-            // Reset the listening state.
-            // setIsListening(false);
-        };
-
-        // Event handler for when the recognition ends.
-        recognition.onend = () => {
-            // setIsListening(false);
-        };
-
-        // Event handler for when an error occurs.
-        recognition.onerror = (event: any) => {
-            // eslint-disable-line @typescript-eslint/no-explicit-any
-            setError(`Speech recognition error: ${event.error}`);
-            setIsListening(false);
-        };
-
-        // Store the recognition object in the ref.
-        recognitionRef.current = recognition;
-
-        // Cleanup function to stop the recognition if the component unmounts.
         return () => {
+            // Cleanup speech recognition when component unmounts
             if (recognitionRef.current) {
                 recognitionRef.current.stop();
             }
@@ -120,8 +69,50 @@ function SpeechApp() {
             setTranscript('');
             setTranslatedText('');
             setError(null);
+
             try {
-                recognitionRef.current?.start();
+                // Initialize speech recognition on user click (iOS requirement)
+                if (!recognitionRef.current) {
+                    const SpeechRecognition =
+                        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+                    if (!SpeechRecognition) {
+                        setError(
+                            'Web Speech API is not supported in this browser. Please use Chrome or Safari.',
+                        );
+                        return;
+                    }
+
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = 'en-US';
+                    recognition.interimResults = false;
+                    recognition.continuous = true;
+
+                    recognition.onresult = (event: any) => {
+                        const last = event.results.length - 1;
+                        const text = event.results[last][0].transcript;
+
+                        console.log(text);
+                        if (text.trim() === 'close program') {
+                            setIsListening(false);
+                        } else {
+                            setTranscript((prevText) => prevText + text + '.');
+                        }
+                    };
+
+                    recognition.onend = () => {
+                        // Keep listening
+                    };
+
+                    recognition.onerror = (event: any) => {
+                        setError(`Speech recognition error: ${event.error}`);
+                        setIsListening(false);
+                    };
+
+                    recognitionRef.current = recognition;
+                }
+
+                recognitionRef.current.start();
                 setIsListening(true);
             } catch (err) {
                 setError('Microphone access denied or already in use.');
@@ -262,7 +253,7 @@ function SpeechApp() {
                         }`}
                         disabled={!!error}>
                         {isListening ? (
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center justify-center space-x-2">
                                 <svg
                                     className="w-5 h-5"
                                     fill="currentColor"
@@ -276,7 +267,7 @@ function SpeechApp() {
                                 <span>Stop Listening</span>
                             </div>
                         ) : (
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center justify-center space-x-2">
                                 <svg
                                     className="w-5 h-5"
                                     fill="currentColor"

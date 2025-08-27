@@ -165,11 +165,7 @@ function GmailDemo() {
                     </ul>
                 ) : (
                     <div className="text-center text-gray-500 p-8">
-                        {isLoading ? (
-                            <p>Loading messages...</p>
-                        ) : (
-                            <p>No messages found. Try a different query or label.</p>
-                        )}
+                        {isLoading ? <p>Loading messages...</p> : <p></p>}
                     </div>
                 )}
             </div>
