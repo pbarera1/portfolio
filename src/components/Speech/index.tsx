@@ -293,6 +293,7 @@ function SpeechApp() {
 
                     <div className="flex-grow flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                         <select
+                            name="Language"
                             value={targetLanguage}
                             onChange={(e) => setTargetLanguage(e.target.value)}
                             className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
@@ -335,6 +336,7 @@ function SpeechApp() {
                     <div className="w-full">
                         <label className="block text-sm text-gray-600 mb-1">Voice</label>
                         <select
+                            name="voice"
                             className="w-full px-3 py-2 border rounded-lg"
                             value={voiceName ?? ''}
                             onChange={(e) => setVoiceName(e.target.value || null)}>

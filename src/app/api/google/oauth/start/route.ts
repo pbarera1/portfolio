@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { oauthClient, GMAIL_SCOPES } from "@/lib/google";
 
 export async function GET() {
-  const client = oauthClient();
+  const client = await oauthClient();
   const url = client.generateAuthUrl({
     access_type: "offline",
     scope: GMAIL_SCOPES,

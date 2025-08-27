@@ -4,7 +4,7 @@ import { gmailClient } from "@/lib/google";
 
 export async function POST(req: Request) {
   const { labelId, q, maxResults = 50 } = await req.json();
-  const gmail = gmailClient();
+  const gmail = await gmailClient();
 
   const list = await gmail.users.messages.list({
     userId: "me",

@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const code = searchParams.get("code");
   if (!code) return NextResponse.redirect(new URL("/?error=missing_code", req.url));
 
-  const client = oauthClient();
+  const client = await oauthClient();
   const { tokens } = await client.getToken(code);
   // Persist access+refresh
   saveTokens(tokens);

@@ -51,7 +51,7 @@ function GmailDemo() {
                     const data = await response.json();
                     setLabels(data);
                 } else {
-                    setErr('Failed to fetch labels.');
+                    setErr('Failed to fetch labels. Please Connect Account');
                 }
             } catch (e) {
                 setErr('Network error while fetching labels.');
@@ -99,32 +99,36 @@ function GmailDemo() {
                     🔗 Connect Google
                 </a>
                 {/* Controls section */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
-                    <select
-                        value={labelId}
-                        onChange={(e) => setLabelId(e.target.value)}
-                        className="flex-shrink-0 w-full sm:w-auto p-3 border border-gray-300 rounded-lg shadow-sm text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-                        {labels.map((l) => (
-                            <option key={l.id} value={l.id} className="p-2 text-base">
-                                {l.name}
-                            </option>
-                        ))}
-                    </select>
-                    <input
-                        type="text"
-                        value={q}
-                        disabled={true}
-                        // onChange={(e) => setQ(e.target.value)}
-                        placeholder="Gmail query (e.g., newer_than:2d)"
-                        className="flex-grow w-full p-3 border border-gray-300 rounded-lg shadow-sm text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                    />
-                    <button
-                        onClick={load}
-                        disabled={isLoading}
-                        className="w-full  px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                        {isLoading ? 'Loading...' : 'Load Messages'}
-                    </button>
-                </div>
+                {labels.length ? (
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
+                        <select
+                            name="label"
+                            value={labelId}
+                            onChange={(e) => setLabelId(e.target.value)}
+                            className="flex-shrink-0 w-full sm:w-auto p-3 border border-gray-300 rounded-lg shadow-sm text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                            {labels.map((l) => (
+                                <option key={l.id} value={l.id} className="p-2 text-base">
+                                    {l.name}
+                                </option>
+                            ))}
+                        </select>
+                        <input
+                            name="gmail query"
+                            type="text"
+                            value={q}
+                            disabled={true}
+                            // onChange={(e) => setQ(e.target.value)}
+                            placeholder="Gmail query (e.g., newer_than:2d)"
+                            className="flex-grow w-full p-3 border border-gray-300 rounded-lg shadow-sm text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                        />
+                        <button
+                            onClick={load}
+                            disabled={isLoading}
+                            className="w-full  px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                            {isLoading ? 'Loading...' : 'Load Messages'}
+                        </button>
+                    </div>
+                ) : null}
 
                 {/* Error message display */}
                 {err && (
