@@ -3,6 +3,16 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 
+declare global {
+    interface Window {
+        SpeechRecognition: any;
+        webkitSpeechRecognition: any;
+        Translator: any;
+    }
+
+    const Translator: any;
+}
+
 // Define the main App component, which will be the default export.
 function SpeechApp() {
     // State to hold the transcribed text from the speech recognition.
@@ -63,7 +73,6 @@ function SpeechApp() {
 
         // Event handler for when a result is received.
         recognition.onresult = (event: any) => {
-            // eslint-disable-line @typescript-eslint/no-explicit-any
             // Get the last transcription result.
             const last = event.results.length - 1;
             const text = event.results[last][0].transcript;
