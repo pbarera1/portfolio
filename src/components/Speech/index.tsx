@@ -63,6 +63,7 @@ function SpeechApp() {
 
         // Event handler for when a result is received.
         recognition.onresult = (event: any) => {
+            // eslint-disable-line @typescript-eslint/no-explicit-any
             // Get the last transcription result.
             const last = event.results.length - 1;
             const text = event.results[last][0].transcript;
@@ -84,6 +85,7 @@ function SpeechApp() {
 
         // Event handler for when an error occurs.
         recognition.onerror = (event: any) => {
+            // eslint-disable-line @typescript-eslint/no-explicit-any
             setError(`Speech recognition error: ${event.error}`);
             setIsListening(false);
         };
