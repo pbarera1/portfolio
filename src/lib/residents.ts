@@ -41,7 +41,7 @@ export async function queryObservations(
 ) {
   const sb = supabaseAdmin();
   const { data, error } = await sb
-    .from('v_observations')
+    .from('observations')
     .select('*')
     .eq('resident_name', residentName)
     .gte('created_at', new Date(Date.now() - sinceDays * 86400000).toISOString())
@@ -59,7 +59,7 @@ export async function isRecentDuplicate(
   const sb = supabaseAdmin();
   const cutoff = new Date(Date.now() - minutes * 60000).toISOString();
   const { data, error } = await sb
-    .from('v_observations')
+    .from('observations')
     .select('id')
     .eq('resident_name', residentName)
     .eq('note', note)
