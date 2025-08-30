@@ -57,13 +57,13 @@ export async function POST(req: NextRequest) {
               {
                 name: 'log_observation',
                 description:
-                  'Insert a resident observation (returns observation id). Pass {"confirm": true} to actually save.',
+                  'Insert a resident observation (returns observation id). Saves to database.',
                 inputSchema: {
                   type: 'object',
                   properties: {
                     resident_name: { type: 'string', minLength: 1 },
                     note: { type: 'string', minLength: 1 },
-                    confirm: { type: 'boolean', default: false },
+                    // confirm: { type: 'boolean', default: false },
                   },
                   required: ['resident_name', 'note'],
                 },
@@ -96,22 +96,22 @@ export async function POST(req: NextRequest) {
             const schema = z.object({
               resident_name: z.string().min(1),
               note: z.string().min(1),
-              confirm: z.boolean().optional().default(false),
+              // confirm: z.boolean().optional().default(false),
             });
             const parsedArgs = schema.safeParse(args);
             if (!parsedArgs.success) return err(id, -32602, 'Invalid params', parsedArgs.error.errors);
-            const { resident_name, note, confirm } = parsedArgs.data;
+            const { resident_name, note } = parsedArgs.data; // confirm removed
 
-            if (!confirm) {
-              return ok(id, {
-                content: [
-                  {
-                    type: 'text',
-                    text: `About to save: "${note}" for ${resident_name}. Call again with {"confirm": true} to proceed.`,
-                  },
-                ],
-              });
-            }
+            // if (!confirm) {
+            //   return ok(id, {
+            //     content: [
+            //       {
+            //         type: 'text',
+            //         text: `About to save: "${note}" for ${resident_name}. Call again with {"confirm": true} to proceed.`,
+            //       },
+            //     ],
+            //   });
+            // }
 
             const obsId = await logObservation(resident_name, note);
             return ok(id, { content: [{ type: 'text', text: `Saved. observation_id=${obsId}` }] });
