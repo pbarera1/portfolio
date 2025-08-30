@@ -12,8 +12,6 @@ import {
   isRecentDuplicate,
 } from '@/lib/residents';
 
-export const runtime = 'nodejs'; // ensure Node runtime
-
 const handler = createMcpHandler(
   (server) => {
     // Tool: log_observation
@@ -110,6 +108,7 @@ const handler = createMcpHandler(
 // OAuth protected-resource metadata (only needed when auth is enabled)
 // No auth wrapper — expose directly
 export { handler as GET, handler as POST };
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
