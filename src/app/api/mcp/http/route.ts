@@ -26,57 +26,76 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    // 1) Optional but recommended handshake
-    if (method === 'initialize') {
-      return NextResponse.json({
-        jsonrpc: '2.0',
-        id,
-        result: {
-          protocolVersion: '2025-03-26',
-          serverInfo: { name: 'nextjs-mcp', version: '0.1.0' },
-          capabilities: {},
-        },
-      });
-    }
+         // 1) Optional but recommended handshake
+     if (method === 'initialize') {
+       return NextResponse.json({
+         jsonrpc: '2.0',
+         id,
+         result: {
+           protocolVersion: '2025-03-26',
+           serverInfo: { name: 'nextjs-mcp', version: '0.1.0' },
+           capabilities: {
+             tools: {}
+           },
+         },
+       });
+     }
 
-    // 2) List tools
-    if (method === 'tools/list') {
-      return NextResponse.json({
-        jsonrpc: '2.0',
-        id,
-        result: {
-          tools: [
-            {
-              name: 'log_observation',
-              description:
-                'Insert a resident observation (returns observation id). Pass {"confirm": true} to actually save.',
-              inputSchema: {
-                type: 'object',
-                properties: {
-                  resident_name: { type: 'string', minLength: 1 },
-                  note: { type: 'string', minLength: 1 },
-                  confirm: { type: 'boolean', default: false },
-                },
-                required: ['resident_name', 'note'],
-              },
-            },
-            {
-              name: 'query_observations',
-              description:
-                'Fetch recent observations for a resident. Use before summarizing last N days.',
-              inputSchema: {
-                type: 'object',
-                properties: {
-                  resident_name: { type: 'string', minLength: 1 },
-                  since_days: { type: 'number', minimum: 1, maximum: 365, default: 7 },
-                },
-                required: ['resident_name'],
-              },
-            },
-          ],
-        },
-      });
-    }
+         // 2) List tools
+     if (method === 'tools/list') {
+       return NextResponse.json({
+         jsonrpc: '2.0',
+         id,
+         result: {
+           tools: [
+             {
+               name: 'log_observation',
+               description: 'Insert a resident observation (returns observation id). Pass {"confirm": true} to actually save.',
+               inputSchema: {
+                 type: 'object',
+                 properties: {
+                   resident_name: {
+                     type: 'string',
+                     description: 'Name of the resident'
+                   },
+                   note: {
+                     type: 'string',
+                     description: 'Observation note to log'
+                   },
+                   confirm: {
+                     type: 'boolean',
+                     description: 'Set to true to actually save the observation',
+                     default: false
+                   },
+                 },
+                 required: ['resident_name', 'note'],
+               },
+             },
+             {
+               name: 'query_observations',
+               description: 'Fetch recent observations for a resident. Use before summarizing last N days.',
+               inputSchema: {
+                 type: 'object',
+                 properties: {
+                   resident_name: {
+                     type: 'string',
+                     description: 'Name of the resident to query'
+                   },
+                   since_days: {
+                     type: 'integer',
+                     description: 'Number of days to look back',
+                     minimum: 1,
+                     maximum: 365,
+                     default: 7
+                   },
+                 },
+                 required: ['resident_name'],
+               },
+             },
+           ],
+         },
+       });
+     }
 
     // 3) Call tools
     if (method === 'tools/call') {
