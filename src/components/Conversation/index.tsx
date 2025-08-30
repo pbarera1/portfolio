@@ -1,9 +1,34 @@
 'use client';
 
 import {useConversation} from '@elevenlabs/react';
-import {useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 type Props = {agentId: string};
+
+type VoiceProps = {isSpeaking: boolean};
+
+type Message = {type: string; score: number};
+
+// A simple example component for a pulsing circle indicator
+const VoiceIndicator = ({isSpeaking}: VoiceProps) => (
+    <div
+        style={{
+            width: '20px',
+            height: '20px',
+            borderRadius: '50%',
+            backgroundColor: isSpeaking ? 'green' : 'gray',
+            transition: 'background-color 0.3s ease',
+            animation: isSpeaking ? 'pulse 1s infinite' : 'none',
+        }}>
+        <style>{`
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
+    </div>
+);
 
 function Conversation({agentId}: Props) {
     const conversation = useConversation({
@@ -34,6 +59,7 @@ function Conversation({agentId}: Props) {
 
     return (
         <div className="flex flex-col items-center gap-4">
+            <VoiceIndicator isSpeaking={conversation?.isSpeaking} />
             <div className="flex gap-2">
                 <button
                     onClick={startConversation}
