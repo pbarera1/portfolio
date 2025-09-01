@@ -76,6 +76,7 @@ export async function isRecentDuplicate(
 
 export type ObservationRow = {
 	id: number;
+	resident_id: number;
 	note: string;
 	created_at: string; // ISO
   };
@@ -111,6 +112,7 @@ export type ObservationRow = {
 		name,
 		observations:observations (
 		  id,
+		  resident_id,
 		  note,
 		  created_at
 		)

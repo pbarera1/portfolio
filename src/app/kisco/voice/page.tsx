@@ -1,5 +1,7 @@
 // app/residents/page.tsx
 import {listResidentsWithObservations} from '@/lib/residents';
+import styles from '@/app/kisco/voice/voice.module.css';
+
 import Conversation from '@/components/Conversation';
 export const dynamic = 'force-dynamic'; // always fresh in dev
 export const revalidate = 0;
@@ -10,7 +12,7 @@ export default async function ResidentsPage() {
     const agentId = process.env.NEXT_PUBLIC_ELEVEN_AGENT_ID!;
 
     return (
-        <main className="mx-auto max-w-3xl p-6">
+        <main className={`mx-auto max-w-3xl p-6 ${styles.main}`}>
             <h1 className="text-2xl font-semibold mb-4">Voice Conversation</h1>
             <Conversation agentId={agentId} />
             <h2 className="text-2xl font-semibold mb-4">Residents & Observations</h2>
@@ -54,3 +56,5 @@ export default async function ResidentsPage() {
         </main>
     );
 }
+
+// 11labs no custom mcp servers in hippa mode
