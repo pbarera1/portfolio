@@ -42,8 +42,9 @@ export async function queryObservations(
   const sb = supabaseAdmin();
   const { data, error } = await sb
     .from('observations')
-    .select('*')
-    .eq('resident_name', residentName)
+  // inner join so we can filter by residents.name
+  .select('id, resident_id, note, created_at, residents!inner(name)')
+  .eq('residents.name', residentName)
     .gte('created_at', new Date(Date.now() - sinceDays * 86400000).toISOString())
     .order('created_at', { ascending: false });
   if (error) throw error;
@@ -57,14 +58,17 @@ export async function isRecentDuplicate(
   minutes = 10
 ) {
   const sb = supabaseAdmin();
-  const cutoff = new Date(Date.now() - minutes * 60000).toISOString();
+  const cutoff = new Date(Date.now() - minutes * 60_000).toISOString();
+
   const { data, error } = await sb
     .from('observations')
-    .select('id')
-    .eq('resident_name', residentName)
+    // inner join so we can filter by residents.name
+    .select('id, residents!inner(name)')
+    .eq('residents.name', residentName)
     .eq('note', note)
     .gte('created_at', cutoff)
     .limit(1);
+
   if (error) throw error;
   return (data?.length ?? 0) > 0;
 }
