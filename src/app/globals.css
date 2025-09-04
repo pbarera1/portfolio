@@ -88,6 +88,10 @@ body {
     --dot2: #e3e3e3; /* lighter dot */
     --cell: 4px; /* spacing of the grid */
     --r: 1px; /* dot radius */
+
+    --bgdark: #656464; /* base gray */
+    --dot1dark: #111010; /* darker dot */
+    --dot2dark: #b9b9b9; /* lighter dot */
     background: radial-gradient(
                 circle,
                 var(--dot1) var(--r),
@@ -101,4 +105,47 @@ body {
 
 .icons {
     align-items: flex-end;
+}
+
+/* Apply to the element you want to flash the whole screen (e.g., body) */
+.explode {
+    animation: bang 0.5s ease-in 1 forwards;
+}
+
+/* Quick multi-color “bang” near the end of each cycle */
+@keyframes bang {
+    /* idle until late in the cycle */
+    10% {
+        background: #e60026;
+    } /* red */
+    20% {
+        background: #ffd400;
+    } /* yellow */
+    30% {
+        background: #1e62fe;
+    } /* blue */
+    40% {
+        background: #ff7a00;
+    } /* orange */
+    50% {
+        background: #ffffff;
+    } /* white flash */
+    60% {
+        background: #e60026;
+    } /* red echo */
+    100% {
+        background: radial-gradient(
+                    circle,
+                    var(--dot1dark) var(--r),
+                    transparent calc(var(--r) + 0.1px)
+                )
+                0 0 / var(--cell) var(--cell),
+            radial-gradient(
+                    circle,
+                    var(--dot2dark) var(--r),
+                    transparent calc(var(--r) + 0.1px)
+                )
+                calc(var(--cell) / 2) calc(var(--cell) / 2) / var(--cell) var(--cell),
+            var(--bgdark);
+    }
 }

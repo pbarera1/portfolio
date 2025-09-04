@@ -1,6 +1,7 @@
 'use client';
 import styled from 'styled-components';
 import {
+    Drag,
     FolderIcon,
     TrashIcon,
     FileIcon,
@@ -8,12 +9,13 @@ import {
     BaselineApple,
     IconProps,
 } from '@/components/Icons';
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import ClassicModal from '@/components/ClassicModal';
 import {projectData} from '@/app/projects/data';
 import {Card} from '@/components/RecentHighlights';
+import {toTranslateWithin, planNonOverlapping, overlap} from '@/components/Monitor/utils';
 
 gsap.registerPlugin(Draggable);
 
@@ -78,7 +80,33 @@ const StyledDropDown = styled.div`
     }
 `;
 
-type ChildType = React.ReactNode | undefined;
+interface TimerProps {
+    duration: number;
+    scatterAll: () => void;
+    onBeforeScatter?: () => void;
+}
+
+const Timer = ({duration, scatterAll, onBeforeScatter}: TimerProps) => {
+    const [time, setTime] = useState(duration);
+
+    useEffect(() => {
+        const iconsWrapperEl = document.querySelector<HTMLElement>('.global-monitor');
+        iconsWrapperEl?.classList.remove('explode');
+
+        if (time <= 0) {
+            onBeforeScatter?.();
+            iconsWrapperEl?.classList.add('explode');
+            requestAnimationFrame(scatterAll);
+            return;
+        }
+
+        const id = window.setTimeout(() => setTime((t) => t - 1), 1000);
+        return () => window.clearTimeout(id);
+    }, [time]);
+    return <div className="text-3xl py-4">Self Destruct in {time}</div>;
+};
+type ChildRender = (api: {close: () => void}) => React.ReactNode;
+type ChildType = React.ReactNode | ChildRender | undefined;
 
 interface IconWithTextProps {
     Icon: React.ComponentType<IconProps>;
@@ -86,9 +114,18 @@ interface IconWithTextProps {
     text?: string;
     children?: ChildType;
     href?: string;
+    drag?: boolean;
 }
-const IconWithText = ({Icon, fill, text, children, href}: IconWithTextProps) => {
+const IconWithText = ({
+    Icon,
+    fill,
+    text,
+    children,
+    href,
+    drag = false,
+}: IconWithTextProps) => {
     const [open, setOpen] = useState(false);
+    const close = useCallback(() => setOpen(false), []);
     return (
         <>
             {href ? (
@@ -104,12 +141,21 @@ const IconWithText = ({Icon, fill, text, children, href}: IconWithTextProps) => 
                 <>
                     <div
                         onClick={() => setOpen(true)}
-                        className="icon flex flex-col text-6xl md:text-6xl align-items-center items-center">
+                        className="isolate relative icon flex flex-col text-6xl md:text-6xl align-items-center items-center">
                         <Icon fill={fill} />
-                        <div className="label text-lg md:text-xl text-center">{text}</div>
+                        <div className="flex justify-center items-center label text-lg md:text-xl text-center">
+                            {text}
+                            {drag && (
+                                <div className="text-2xl">
+                                    <Drag />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <ClassicModal open={open} title={text} onClose={() => setOpen(false)}>
-                        {children}
+                        {typeof children === 'function'
+                            ? (children as ChildRender)({close})
+                            : children}
                     </ClassicModal>
                 </>
             )}
@@ -137,89 +183,109 @@ const MENU_DATA = [
 ];
 
 export default function Monitor() {
-    const desktopRef = useRef(null);
+    const desktopRef = useRef<HTMLDivElement | null>(null);
     const [time, setTime] = useState<Date | null>(null);
-    const [openMenuItem, setOpenMenuItem] = useState('');
+    const [openMenuItem, setOpenMenuItem] = useState<string>('');
 
-    const handleMenuOpen = (title: string) => {
+    const handleMenuOpen = useCallback((title: string) => {
         setOpenMenuItem(title);
-    };
-
-    useEffect(() => {
-        // initialize on mount
-        setTime(new Date());
-        // tick every minute
-        const interval = setInterval(() => setTime(new Date()), 60_000);
-        return () => clearInterval(interval);
     }, []);
 
-    const dateString = time
-        ? new Intl.DateTimeFormat(undefined, {
-              hour: '2-digit',
-              minute: '2-digit',
-          })
-              .format(time)
-              .split(' ')?.[0]
-        : '';
-
+    // clock: initialize + tick every minute
     useEffect(() => {
-        // terrible close menu logic
-        function handleDropDownClick(e: Event) {
-            // 1. Check if e.target is null or undefined
-            if (!e.target) {
-                return;
-            }
+        setTime(new Date());
+        const id = window.setInterval(() => setTime(new Date()), 60_000);
+        return () => window.clearInterval(id);
+    }, []);
 
-            // 2. Cast e.target to HTMLElement to access classList
-            const targetElement = e.target as HTMLElement;
-            if (
-                targetElement.classList.contains('menu-title') ||
-                targetElement.classList.contains('item')
-            ) {
-                return;
-            }
+    const dateString = useMemo(() => {
+        if (!time) return '';
+        // HH:MM (24/12h depends on locale)
+        return (
+            new Intl.DateTimeFormat(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+            })
+                .format(time)
+                .split(' ')?.[0] ?? ''
+        );
+    }, [time]);
+
+    // close menus on outside click
+    useEffect(() => {
+        function handleDropDownClick(e: MouseEvent) {
+            const target = e.target;
+            if (!(target instanceof Element)) return;
+            // ignore clicks on menu title or items
+            if (target.closest('.menu-title, .item')) return;
             setOpenMenuItem('');
         }
         window.addEventListener('click', handleDropDownClick);
-        const timeout = setInterval(() => {
-            setTime(new Date());
-        }, 60000);
-
-        return () => {
-            clearInterval(timeout);
-            window.removeEventListener('click', handleDropDownClick);
-        };
+        return () => window.removeEventListener('click', handleDropDownClick);
     }, []);
 
+    // Make icons draggable within the desktop bounds
     useEffect(() => {
         const desktop = desktopRef.current;
+        if (!desktop) return;
 
-        // make every .icon draggable within the desktop bounds
         const drags = Draggable.create('.icon', {
             bounds: desktop,
             type: 'x,y',
-            inertia: false, // set to true if you have InertiaPlugin
+            inertia: false,
             onPress() {
-                // bring to front on pick-up
                 gsap.set(this.target, {zIndex: 1, cursor: 'grabbing'});
             },
             onRelease() {
                 gsap.set(this.target, {cursor: 'grab', zIndex: 'auto'});
             },
             onDragEnd() {
-                const target = this.target;
-
-                // Optional: snap to grid (comment out if you want free placement)
+                // optional: snap to grid
                 const grid = 12;
                 const x = Math.round(this.x / grid) * grid;
                 const y = Math.round(this.y / grid) * grid;
-                gsap.to(target, {duration: 0.1, x, y});
+                gsap.to(this.target, {duration: 0.1, x, y});
                 gsap.set(this.target, {zIndex: 0});
             },
         });
 
-        return () => drags.forEach((d) => d.kill());
+        return () => {
+            drags.forEach((d) => d.kill());
+        };
     }, []);
+
+    /** Scatter: animate all .icon elements to random points inside the desktop */
+    const scatterAll = useCallback(
+        ({duration = 0.8, ease = 'power3.out', stagger = 0.03, padding = 8} = {}) => {
+            const board = desktopRef.current;
+            if (!board) return;
+
+            // limit scope to icons inside the board
+            const icons = Array.from(board.querySelectorAll<HTMLElement>('.icon'));
+            if (!icons.length) return;
+
+            // 1) choose non-overlapping targets covering full width/height
+            const targets = planNonOverlapping(board, icons, padding, /*gap=*/ 8);
+
+            // 2) map to transform deltas from current spot → destination
+            const deltas = icons.map((el, i) => toTranslateWithin(board, el, targets[i]));
+
+            // 3) tween (no absolute positioning needed)
+            gsap.to(icons, {
+                x: (i) => deltas[i].x,
+                y: (i) => deltas[i].y,
+                duration,
+                ease,
+                stagger,
+                onUpdate() {
+                    for (const t of this.targets() as HTMLElement[]) {
+                        Draggable.get(t)?.update(true);
+                    }
+                },
+            });
+        },
+        [],
+    );
 
     return (
         <StyledMonitor
@@ -259,13 +325,26 @@ export default function Monitor() {
             </div>
             <div className="icons flex flex-col justify-self-end pad-8">
                 <div className="flex flex-col align-items-center items-center gap-8">
-                    <IconWithText fill={'#fff'} Icon={SystemAliveIcon} text="System">
-                        <img
-                            src="/matrix-2.gif"
-                            width="498"
-                            height="298"
-                            loading="lazy"
-                        />
+                    <IconWithText
+                        fill={'#fff'}
+                        Icon={SystemAliveIcon}
+                        text="System"
+                        drag={true}>
+                        {({close}) => (
+                            <>
+                                <Timer
+                                    duration={3}
+                                    scatterAll={scatterAll}
+                                    onBeforeScatter={close}
+                                />
+                                <img
+                                    src="/matrix-2.gif"
+                                    width="498"
+                                    height="298"
+                                    loading="lazy"
+                                />
+                            </>
+                        )}
                     </IconWithText>
                     <IconWithText fill={'#fff'} Icon={FolderIcon} text="Projects">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
