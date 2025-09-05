@@ -108,8 +108,65 @@ body {
 }
 
 /* Apply to the element you want to flash the whole screen (e.g., body) */
-.explode {
-    animation: bang 0.5s ease-in 1 forwards;
+.global-monitor {
+    /* animation: bang 1s ease-in 1 forwards; */
+    position: relative;
+    transition: all 0.5s ease-out;
+}
+
+/* --- The pseudo-element that creates the explosive bang --- */
+.global-monitor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+
+    /* Initial state of the bang: hidden and small */
+    transform: scale(0);
+    opacity: 0;
+}
+
+.global-monitor.animate::before {
+    animation: bang-flash 1s ease-in 1 forwards;
+}
+
+@keyframes bang-flash {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    10% {
+        background: #e60026; /* red */
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    20% {
+        background: #ffd400; /* yellow */
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    30% {
+        background: #1e62fe; /* blue */
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    40% {
+        background: #ff7a00; /* orange */
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    50% {
+        background: #ffffff; /* white flash */
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 /* Quick multi-color “bang” near the end of each cycle */

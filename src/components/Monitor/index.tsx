@@ -91,11 +91,11 @@ const Timer = ({duration, scatterAll, onBeforeScatter}: TimerProps) => {
 
     useEffect(() => {
         const iconsWrapperEl = document.querySelector<HTMLElement>('.global-monitor');
-        iconsWrapperEl?.classList.remove('explode');
+        iconsWrapperEl?.classList.remove('animate');
 
         if (time <= 0) {
             onBeforeScatter?.();
-            iconsWrapperEl?.classList.add('explode');
+            iconsWrapperEl?.classList.add('animate');
             requestAnimationFrame(scatterAll);
             return;
         }
