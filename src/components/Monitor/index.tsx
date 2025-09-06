@@ -103,7 +103,9 @@ const Timer = ({duration, scatterAll, onBeforeScatter}: TimerProps) => {
         const id = window.setTimeout(() => setTime((t) => t - 1), 1000);
         return () => window.clearTimeout(id);
     }, [time]);
-    return <div className="text-3xl py-4">Self Destruct in {time}</div>;
+    return (
+        <div className="text-3xl py-4">Unauthorized Access Self Destruct in {time}</div>
+    );
 };
 type ChildRender = (api: {close: () => void}) => React.ReactNode;
 type ChildType = React.ReactNode | ChildRender | undefined;
@@ -331,19 +333,18 @@ export default function Monitor() {
                         text="System"
                         drag={true}>
                         {({close}) => (
-                            <>
-                                <Timer
-                                    duration={3}
-                                    scatterAll={scatterAll}
-                                    onBeforeScatter={close}
-                                />
-                                <img
-                                    src="/matrix-2.gif"
-                                    width="498"
-                                    height="298"
-                                    loading="lazy"
-                                />
-                            </>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                <IconWithText
+                                    fill={'#fff'}
+                                    Icon={FileIcon}
+                                    text={'Top Secret/Majic Eyes Only'}>
+                                    <Timer
+                                        duration={3}
+                                        scatterAll={scatterAll}
+                                        onBeforeScatter={close}
+                                    />
+                                </IconWithText>
+                            </div>
                         )}
                     </IconWithText>
                     <IconWithText fill={'#fff'} Icon={FolderIcon} text="Projects">
